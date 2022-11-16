@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowUpRightFromSquare,
@@ -13,50 +14,102 @@ import {
 } from './styles'
 import { Form } from '../../components/Form'
 import { Card } from '../../components/Card'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+interface Profile {
+  user: string
+  name: string
+  avatar_url: string
+  followers: number
+  company: string
+  bio: string
+}
+
+export interface Issue {
+  title: string
+  body: string
+  number: number
+}
 
 export function Home() {
+  const [user, setUser] = useState<Profile>()
+  const [issues, setIssues] = useState<Issue[]>([])
+  const [filter, setFilter] = useState('')
+
+  const filtered = issues.filter((item) =>
+    item.title.toUpperCase().includes(filter.toUpperCase()),
+  )
+
+  useEffect(() => {
+    axios.get('https://api.github.com/users/andr3felipe').then((response) => {
+      console.log(response.data)
+      setUser({
+        user: response.data.login,
+        name: response.data.name,
+        avatar_url: response.data.avatar_url,
+        followers: response.data.followers,
+        company: response.data.company,
+        bio: response.data.bio,
+      })
+    })
+
+    axios
+      .get('https://api.github.com/repos/andr3felipe/Github-Blog/issues')
+      .then((response) => {
+        console.log(response.data)
+        setIssues(response.data)
+      })
+  }, [])
+
   return (
     <HomeContainer>
       <ProfileContainer>
-        <img
-          src="https://avatars.githubusercontent.com/u/105335598?v=4"
-          alt=""
-        />
+        <img src={user?.avatar_url} alt="" />
         <AlignProfileText>
           <div>
-            André Felipe
+            {user?.name}
             <span>
-              GITHUB
-              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+              <a href="https://github.com/andr3felipe">
+                GITHUB
+                <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+              </a>
             </span>
           </div>
-          <div>
-            Tristique volutpat pulvinar vel massa, pellentesque egestas. Eu
-            viverra massa quam dignissim aenean malesuada suscipit. Nunc,
-            volutpat pulvinar vel mass.
-          </div>
+          <div>{user?.bio}</div>
           <div>
             <div>
               <img src={GitHubIcon} alt="" />
-              <span>cameronwll</span>
+              <span>{user?.name}</span>
             </div>
             <div>
               <FontAwesomeIcon icon={faBuilding} />
-              <span>Rocketseat</span>
+              <span>{user?.company == null ? 'empty' : user?.company}</span>
             </div>
             <div>
               <FontAwesomeIcon icon={faUserGroup} />
-              <span>32 seguidores</span>
+              <span>{user?.followers} seguidores</span>
             </div>
           </div>
         </AlignProfileText>
       </ProfileContainer>
-      <Form />
+      <Form issues={issues} filter={filter} setFilter={setFilter} />
       <CardAlign>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {filter === ''
+          ? issues.map((item) => {
+              return (
+                <Link to={`/issues/${item.number}`} key={item.title}>
+                  <Card title={item.title} body={item.body} />
+                </Link>
+              )
+            })
+          : filtered.map((item) => {
+              return (
+                <Link to={`/issues/${item.number}`} key={item.title}>
+                  <Card title={item.title} body={item.body} />
+                </Link>
+              )
+            })}
       </CardAlign>
     </HomeContainer>
   )

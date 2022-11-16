@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const CardContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
 
   width: 26rem;
@@ -22,6 +22,8 @@ export const CardContainer = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    width: 22rem;
+    max-width: 100%;
 
     gap: 1rem;
 
@@ -43,5 +45,6 @@ export const CardContainer = styled.div`
     // Card Body
     color: ${(props) => props.theme['base-text']};
     line-height: 1.6rem;
+    height: 7rem;
   }
 `

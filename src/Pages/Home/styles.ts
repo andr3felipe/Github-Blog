@@ -28,6 +28,9 @@ export const ProfileContainer = styled.div`
   }
 `
 export const AlignProfileText = styled.div`
+  width: 600px;
+  max-width: 60vw;
+
   > div:first-of-type {
     //PROFILE NAME AND GITHUB DIV
     display: flex;
@@ -40,9 +43,10 @@ export const AlignProfileText = styled.div`
     line-height: 130%;
     font-size: 1.5rem;
 
-    span {
+    span > a {
       font-weight: 700;
       font-size: 0.75rem;
+      text-decoration: none;
       color: ${(props) => props.theme.blue};
 
       svg {
@@ -96,4 +100,8 @@ export const CardAlign = styled.main`
   gap: 2rem;
 
   padding-bottom: 14.625rem;
+
+  a {
+    text-decoration: none;
+  }
 `
