@@ -70,7 +70,11 @@ export function Home() {
           <div>
             {user?.name}
             <span>
-              <a href="https://github.com/andr3felipe">
+              <a
+                href="https://github.com/andr3felipe"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 GITHUB
                 <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
               </a>
